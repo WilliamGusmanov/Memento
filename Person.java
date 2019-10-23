@@ -162,6 +162,7 @@ public class Person {
 		//return new PersonMemento(this.lName, this.fName, hairColor, heightInches, heightInches, heightInches);
 		return new PersonMemento(new Person(this.lName,this.fName, this.hairColor, this.getHeightFeet(), this.getHeightInches(), this.getWeightPounds())); 
 	}
+	
 	public Person restore(PersonMemento archive) {
 		return new Person(this.lName, this.fName, archive.getHairColor(), archive.getHeightFeet(), archive.getHeightInches(), archive.getWeightPounds());  
 	} 

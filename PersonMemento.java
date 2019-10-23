@@ -80,4 +80,10 @@ public class PersonMemento implements Serializable {
 		return new Person(lName, fName, hairColor, getHeightFeet(), getHeightInches(), getWeightPounds());
 	}
 	
+	@Override
+	public String toString() {
+		return "heightInches=" + heightInches + ", weightPounds=" + weightPounds + ", lName=" + lName
+				+ ", fName=" + fName + ", hairColor=" + hairColor;
+	}
+	
 }
