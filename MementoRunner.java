@@ -8,60 +8,23 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 
-import momentoPackage.MomentoRunner;
-
 public class MementoRunner {
 	public static void main(String[] args) {
-		MementoRunner runner = new MementoRunner(); 
-		runner.input();
-		runner.input();
-		runner.readFile();
+		Person Bryan = new Person ("Vu","Bryan",Person.HairColor.BLACK,5,11,230);
+		Person Bryan2 = new Person ("Vu","Bryan",Person.HairColor.BLACK,5,8,160);
+		PersonMemento MBryan = new PersonMemento(Bryan);
+		PersonMemento MWilliam = new PersonMemento(Bryan2);
+		PersonCareTaker careTaker = new PersonCareTaker();
+		careTaker.addMemento(MBryan);
+		careTaker.addMemento(MWilliam);
+		careTaker.readFile();
 		System.out.println("Program completed satisfactory");
 	}
 	/**
 	 * a.) prompts the user for the name and path of the file that they will use for storing their PersonMemento objects
 	 * 
 	 */
-	public void input() {
-		//Use JFileReader
-		String fileName = "out.bin";
-		try {
-			FileOutputStream fileOs = new FileOutputStream(fileName);
-			ObjectOutputStream os = new ObjectOutputStream(fileOs);
-			os.writeInt(2048);
-			os.writeBytes("writing to out.bin");
-			os.close();
-		}
-		catch (FileNotFoundException exception) {
-			exception.printStackTrace();
-		} 
-		catch (IOException exception) {
-			exception.printStackTrace();
-		}
-	}
-	
-	public void readFile() {
-		String fileName = "out.bin";
-		try {
-			FileInputStream fileIs = new FileInputStream(fileName);
-			ObjectInputStream is = new ObjectInputStream(fileIs);
-			int x = is.readInt();
-			String y = is.readLine();
-			int z = is.readInt();
-			String a = is.readLine();
-			System.out.println(x + "\n" + y + "\n" + z + "\n" + a);
-			is.close();
-		} 
-		catch (FileNotFoundException exception) {
-			
-			exception.printStackTrace();
-		} 
-		catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
-	
+
 	/**
 	 * b.) Go into a loop, prompt user for the Person Characteristics (height, weight, ...) at various times
 	 */
