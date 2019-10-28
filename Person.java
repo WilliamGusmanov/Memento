@@ -1,13 +1,12 @@
 package mementoPackage; 
-import java.util.Scanner;
 
-import momentoPackage.PersonMomento;
+
 
 public class Person {
 	/**
 	 * originator : the object for which the state is to be saved. It creates the memento and uses it in future to undo.
 	 * Demonstration class that we will preserve into an instance of Memento.
-	 * @author William Gusmanov
+	 * @author William Gusmanov, Bryan Vu
 	 *
 	 */
 	/** Height of the person in inches.  Note that we do not STORE the height in feet, that's calculated.
@@ -43,16 +42,17 @@ public class Person {
 					results = color;
 					found = true;
 					break;
-				}
+				} //end if 
 				currentColor++;
-			}
+			} //end for loop
 			if (found) {
 				return results;
-			} else {
+			} //end if  
+			else {
 				throw new IllegalArgumentException ("Color number outside of range!");
-			}
-		}
-	}
+			} //end else
+		} //end function definition
+	 }//end enumeration definition
 	/**
 	 * Build a new person.
 	 * @param lName				Last name.
@@ -68,50 +68,56 @@ public class Person {
 		this.lName = lName;
 		this.fName = fName;
 		this.hairColor = color;
-	}
+	}//end function definition
 	
 	public Person (String lName, String fName) {
 		this.lName = lName;
 		this.fName = fName;
 		this.hairColor = HairColor.BALD;
-	}
+	}//end function definition
 	
 	public String getlName () {
 		return this.lName;
-	}
+	}//end function definition
 	
 	public String getfName () {
 		return this.fName;
-	}
+	}//end function definition
 	
 	/**
 	 * Retrieve the person's hair color.
 	 * @return	Their current hair color.
 	 */
-	public HairColor getHairColor () {return this.hairColor;}
+	public HairColor getHairColor () {
+		return this.hairColor;
+	}//end function definition
 	
 	/**
 	 * Set the person's hair color.
 	 * @param newColor	Their new hair color.
 	 */
-	public void setHairColor (HairColor newColor) {this.hairColor = newColor;}
+	public void setHairColor (HairColor newColor) {
+		this.hairColor = newColor;
+	}//end function definition
 	
 	public void setHeight (int feet, int inches) {
 		int totalInches = netHeight (feet, inches);
 		if (totalInches < minHeight || totalInches > maxHeight) {
 			throw new IllegalArgumentException("Height out of bounds!");
-		} else {
+		}//end if 
+		else {
 			this.heightInches = totalInches;
-		}
-	}
+		} //end else
+	}//end function definition
 	
 	public void setWeight (int pounds) {
 		if (pounds < minWeight || pounds > maxWeight) {
 			throw new IllegalArgumentException ("Weight out of bounds!");
-		} else {
+		}//end if  
+		else {
 			this.weightPounds = pounds; 
-		}
-	}
+		}//end else
+	}//end function definition
 	
 	/**
 	 * Give the height of the person in inches.
@@ -119,7 +125,7 @@ public class Person {
 	 */
 	public int getHeightInches () {
 		return this.heightInches;
-	}
+	}//end function definition
 	
 	/**
 	 * Return the feet (floor) of the person.
@@ -127,7 +133,7 @@ public class Person {
 	 */
 	public int getHeightFeet () {
 		return this.getHeightInches()/inchesPerFoot;
-	}
+	}//end function definition
 	
 	/**
 	 * Return the number of lbs the person weighs.
@@ -135,7 +141,7 @@ public class Person {
 	 */
 	public int getWeightPounds () {
 		return this.weightPounds;
-	}
+	}//end function definition
 	
 	/**
 	 * Calculate height from feet & inches.
@@ -145,7 +151,7 @@ public class Person {
 	 */
 	private static int netHeight (int feet, int inches) {
 		return feet * inchesPerFoot + inches;
-	}
+	}//end function definition
 	
 	/**
 	 * Return string version of the Person.
@@ -157,17 +163,16 @@ public class Person {
 				this.lName, this.fName, "" + this.hairColor, this.getHeightFeet(), 
 				this.getHeightInches()%inchesPerFoot,
 				this.weightPounds);//So we can print the Person.
-	}
+	}//end function definition
 	public PersonMemento save(){
 		//return new PersonMemento(this.lName, this.fName, hairColor, heightInches, heightInches, heightInches);
 		return new PersonMemento(new Person(this.lName,this.fName, this.hairColor, this.getHeightFeet(), this.getHeightInches(), this.getWeightPounds())); 
-	}
+	}//end function definition
 	
 	public Person restore(PersonMemento archive) {
 		return new Person(this.lName, this.fName, archive.getHairColor(), archive.getHeightFeet(), archive.getHeightInches(), archive.getWeightPounds());  
-	} 
+	}//end function definition
 }
-
 
 
 

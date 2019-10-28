@@ -1,17 +1,14 @@
 package mementoPackage;
 
-import java.io.File;
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.util.ArrayList;
-
 import javax.swing.JFileChooser;
 
-import momentoPackage.PersonCaretaker;
 
 /**
  * Caretaker class: The object that keeps track of multiple Memento.
@@ -21,119 +18,106 @@ import momentoPackage.PersonCaretaker;
  */
 public class PersonCareTaker {
 	
-	//file
-	private String filePath = "out.txt";
+	/**
+	 * file path that is used to enter into Scanners to write and read binary values
+	 */
+	private String filePath;
+	
+	/**
+	 * value used to writing to file. false to overwrite file. True to append to file. 
+	 */
 	private boolean append = false; 
 	
+	/**
+	 * keeps track of how many mementos have been added. Used to
+	 */
+	int personsAdded = 0; 
 	public static void main(String[] args) {
 		new PersonCareTaker(); 
 	}
+	
 	/**
-	 * constructor that runs all the I/O
-	 * there is only one file that is being written to and read from 
+	 * default constructor 
 	 */
 	public PersonCareTaker(){
-		
+		filePath = "out.txt";
 	}
-	//ArrayList<PersonMemento> savedPersonInstances = new ArrayList<PersonMemento>();
-/*	public void addMomento(PersonMemento personInstance) {
-		savedPersonInstances.add(personInstance);
-	}*/
-	/**
-	 * returns instance of personmemento with lowest weight 
-	 * @return
-	 */
 	
+	/**
+	 * Asks user for what file to write Person Mementos into and sets the filePath to the file selected. 
+	 */
 	public void input() {
 		JFileChooser jFileChooser = new JFileChooser();
-		jFileChooser.setDialogTitle("Select File");
+		jFileChooser.setDialogTitle("Select file to save records of person");
 		if (jFileChooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
 			String outname = jFileChooser.getSelectedFile().getAbsolutePath();
 			this.filePath = outname;
+			append = false; 
 		} 
 	}
 	
-	public void addMemento(PersonMemento personToWrite) {
-		try {
-			FileOutputStream fileOs = new FileOutputStream(this.filePath,append);
-			append = true; 
-			ObjectOutputStream os = new ObjectOutputStream(fileOs);
-			os.writeBytes(personToWrite.toString()+"\n");
-			os.close();
-		} 
-		catch (FileNotFoundException exception) {
-			exception.printStackTrace();
-		} 
-		catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
+	/**
+	 * 
+	 * @param personToWrite, writes instance of personMemento into file 
+	 * @throws IOException, if file not found
+	 */
+	public void addMemento(PersonMemento personToWrite) throws IOException {
+		DataOutputStream addToFile = new DataOutputStream(new BufferedOutputStream(new FileOutputStream(filePath,append)));
+		append = true;
+		addToFile.writeUTF(personToWrite.toString());
+		personsAdded++;
+		addToFile.close();
+	}//end function definition
 	
-	public void readFile() {
-		try {
-			FileInputStream fileIs = new FileInputStream(this.filePath);
-			ObjectInputStream is = new ObjectInputStream(fileIs);
-			String personLine = is.readLine();
-			String [] personInfo = personLine.split(",");
-			int heightInches = Integer.parseInt(personInfo[0].substring(13));
-			int weightPounds = Integer.parseInt(personInfo[1].substring(14));
-			String lName = personInfo[2].substring(7);
-			String fName = personInfo[3].substring(7);
-			String personHairColor = personInfo[4].substring(11);
-			System.out.println(personLine);
-			System.out.println(personHairColor);
-			is.close();
-		} 
-		catch (FileNotFoundException exception) {
-			
-			exception.printStackTrace();
-		} 
-		catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
-/*	
-	public void readFile() {
-		String fileName = "out.bin";
-		try {
-			FileInputStream fileIs = new FileInputStream(fileName);
-			ObjectInputStream is = new ObjectInputStream(fileIs);
-			int x = is.readInt();
-			String y = is.readLine();
-			int z = is.readInt();
-			String a = is.readLine();
-			System.out.println(x + "\n" + y + "\n" + z + "\n" + a);
-			is.close();
-		} 
-		catch (FileNotFoundException exception) {
-			
-			exception.printStackTrace();
-		} 
-		catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}*/
-
-/*	public PersonMemento getPersonMemento() {
-		PersonMemento lowest = savedPersonInstances.get(0); 
-		for (PersonMemento x : savedPersonInstances) {
-			if (x.getWeightPounds() < lowest.getWeightPounds()) {
-				lowest = x;
-				}
-			}
-		return lowest; 
-	}
-	public PersonMemento getPersonMemento(int weight) {
-		for (PersonMemento x : savedPersonInstances) {
-			if (x.getWeightPounds() == weight) {
-				return x; 
-				}
-			}
-		return null; 
-	}*/	
+	/**
+	 * @return, the personMemento instance with the lowest weight 
+	 * @throws IOException, if file not found. 
+	 */
+	public PersonMemento getMemento() throws IOException{
+		DataInputStream readFromFile = new DataInputStream(new BufferedInputStream(new FileInputStream(filePath)));
+		PersonMemento lowestWeight = null; 
+		for (int i = 0; i < personsAdded; i++) {
+			String [] personInfo = readFromFile.readUTF().split(";");
+			String lName = personInfo[0].substring(6);
+			String fName																																																																	 = personInfo[1].substring(1);
+			String personHairColor = personInfo[2].substring(13);
+			String heightFeetInches = personInfo[3].substring(8); //must convert this to inches
+			String []splitheightFeetInches = heightFeetInches.split("'");
+			int heightFeet = Integer.parseInt(splitheightFeetInches[0]);
+			int heightInches = Integer.parseInt(splitheightFeetInches[1]);
+			int weightPounds = Integer.parseInt(personInfo[4].substring(11));
+			if (lowestWeight == null || weightPounds < lowestWeight.getWeightPounds()) {
+				lowestWeight = new PersonMemento(new Person(lName, fName, Person.HairColor.valueOf(personHairColor), heightFeet, heightInches, weightPounds));
+			}//end if
+		}//end for loop
+		readFromFile.close();
+		return lowestWeight; 	
+	}//end function definition
 	
-}
-
+	/**
+	 * @param weight, used to find the memento in the file that matches the weight
+	 * @return null if weight not found, otherwise return memento with the same weight
+	 * @throws IOException, if file not found
+	 */
+	public PersonMemento getMemento(int weight) throws IOException{
+		DataInputStream readFromFile = new DataInputStream(new BufferedInputStream(new FileInputStream(filePath)));
+		PersonMemento sameWeight = null; 
+		for (int i = 0; i < personsAdded; i++) {
+			String [] personInfo = readFromFile.readUTF().split(";");
+			String lName = personInfo[0].substring(6);
+			String fName																																																																	 = personInfo[1].substring(1);
+			String personHairColor = personInfo[2].substring(13);
+			String heightFeetInches = personInfo[3].substring(8); //must convert this to inches
+			String []splitheightFeetInches = heightFeetInches.split("'");
+			int heightFeet = Integer.parseInt(splitheightFeetInches[0]);
+			int heightInches = Integer.parseInt(splitheightFeetInches[1]);
+			int weightPounds = Integer.parseInt(personInfo[4].substring(11));
+			if (weight == weightPounds) {
+				readFromFile.close();
+				return new PersonMemento(new Person(lName, fName, Person.HairColor.valueOf(personHairColor), heightFeet, heightInches, weightPounds));
+			}//end if statement
+		}//end for loop
+		readFromFile.close();
+		return sameWeight; 
+	}//end function definition
+}//end class defintion

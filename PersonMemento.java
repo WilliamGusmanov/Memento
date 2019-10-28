@@ -7,7 +7,7 @@ import mementoPackage.Person.HairColor;
 public class PersonMemento implements Serializable {
 	/**
 	 * Memento: the object that is going to maintain the state of originator/person.
-	 * @author williamgusmanov
+	 * @author William Gusmanov, Bryan Vu
 	 *
 	 */
 	private int heightInches;
@@ -21,15 +21,13 @@ public class PersonMemento implements Serializable {
 	private HairColor hairColor;
 	/** Ratio of inches to feet. */
 	public static final int inchesPerFoot = 12;
-	/** Maximum believable height in inches.*/
-	private static final int maxHeight = 7 * inchesPerFoot;
-	/** Minimum believable height in inches. */
-	private static final int minHeight = 1 * inchesPerFoot;
 	/** Maximum believable weight in pounds.*/
 	public static final int maxWeight = 400;
-	/** Minimum believable weight in pounds.*/
-	private static final int minWeight = 20;
-	//could be cal
+	
+	/**
+	 * constructor
+	 * @param p
+	 */
 	PersonMemento(Person p){
 		heightInches = p.getHeightInches();
 		weightPounds = p.getWeightPounds();
@@ -43,7 +41,7 @@ public class PersonMemento implements Serializable {
 	 */
 	public int getHeightInches () {
 		return this.heightInches;
-	}
+	}//end function definition
 	
 	/**
 	 * Return the feet (floor) of the person.
@@ -51,7 +49,7 @@ public class PersonMemento implements Serializable {
 	 */
 	public int getHeightFeet () {
 		return this.getHeightInches()/inchesPerFoot;
-	}
+	}//end function definition
 	
 	/**
 	 * Return the number of lbs the person weighs.
@@ -59,31 +57,32 @@ public class PersonMemento implements Serializable {
 	 */
 	public int getWeightPounds () {
 		return this.weightPounds;
-	}
-	
-	public HairColor getHairColor () {
-		return this.hairColor;
-		}
+	}//end function definition
 	
 	/**
-	 * Calculate height from feet & inches.
-	 * @param feet	The feet in height.
-	 * @param inches	The inches above the last foot that need to be added to get height in inches.
-	 * @return	Total height in inches.
+	 * 
+	 * @return
 	 */
-	/*
-	private static int netHeight (int feet, int inches) {
-		return feet * inchesPerFoot + inches;
-	}
-	*/
+	public HairColor getHairColor () {
+		return this.hairColor;
+	}//end function definition
+	
+	/**
+	 * 
+	 * @return
+	 */
 	public Person getSavedPerson(){
 		return new Person(lName, fName, hairColor, getHeightFeet(), getHeightInches(), getWeightPounds());
-	}
+	}//end function definition
 	
+	/**
+	 * toString method
+	 */
 	@Override
-	public String toString() {
-		return "heightInches=" + heightInches + ", weightPounds=" + weightPounds + ", lName=" + lName
-				+ ", fName=" + fName + ", hairColor=" + hairColor;
-	}
-	
-}
+	public String toString () {
+		return String.format("Name: %s, %s, Hair Color: %s, Height:%d'%d, Weight #: %d",
+				this.lName, this.fName, "" + this.hairColor, this.getHeightFeet(), 
+				this.getHeightInches()%inchesPerFoot,
+				this.weightPounds);//So we can print the Person.
+	}//end function definition
+}//end class definition
