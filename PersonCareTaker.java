@@ -5,6 +5,7 @@ import java.io.BufferedOutputStream;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import javax.swing.JFileChooser;
@@ -26,27 +27,40 @@ public class PersonCareTaker {
 	/**
 	 * value used to writing to file. false to overwrite file. True to append to file. 
 	 */
-	private boolean append = false; 
+	private boolean append;
+	
+	private FileOutputStream out;
+	
+	private FileInputStream in;
 	
 	/**
 	 * keeps track of how many mementos have been added. Used to
 	 */
 	int personsAdded = 0; 
-	public static void main(String[] args) {
-		new PersonCareTaker(); 
-	}
-	
 	/**
 	 * default constructor 
 	 */
-	public PersonCareTaker(){
+/*	public PersonCareTaker(){
 		filePath = "out.txt";
+		append = false;
+	}*/
+	
+	public PersonCareTaker(String filePath) {
+		this.filePath = filePath;
+		append = false;
+		try {
+			in = new FileInputStream(filePath);
+			out = new FileOutputStream(filePath,append);
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 	
 	/**
 	 * Asks user for what file to write Person Mementos into and sets the filePath to the file selected. 
 	 */
-	public void input() {
+/*	public void input() {
 		JFileChooser jFileChooser = new JFileChooser();
 		jFileChooser.setDialogTitle("Select file to save records of person");
 		if (jFileChooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
@@ -54,7 +68,7 @@ public class PersonCareTaker {
 			this.filePath = outname;
 			append = false; 
 		} 
-	}
+	}*/
 	
 	/**
 	 * 
@@ -62,7 +76,8 @@ public class PersonCareTaker {
 	 * @throws IOException, if file not found
 	 */
 	public void addMemento(PersonMemento personToWrite) throws IOException {
-		DataOutputStream addToFile = new DataOutputStream(new BufferedOutputStream(new FileOutputStream(filePath,append)));
+		out = new FileOutputStream(filePath,append);
+		DataOutputStream addToFile = new DataOutputStream(new BufferedOutputStream(out));
 		append = true;
 		addToFile.writeUTF(personToWrite.toString());
 		personsAdded++;
@@ -74,7 +89,7 @@ public class PersonCareTaker {
 	 * @throws IOException, if file not found. 
 	 */
 	public PersonMemento getMemento() throws IOException{
-		DataInputStream readFromFile = new DataInputStream(new BufferedInputStream(new FileInputStream(filePath)));
+		DataInputStream readFromFile = new DataInputStream(new BufferedInputStream(in));
 		PersonMemento lowestWeight = null; 
 		for (int i = 0; i < personsAdded; i++) {
 			String [] personInfo = readFromFile.readUTF().split(";");
