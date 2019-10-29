@@ -1,7 +1,12 @@
+/**
+ * Memento: the object that is going to maintain the state of originator/person.
+ * @author Bryan Vu
+ * @author William Gusmanov
+ */
+
 package mementoPackage;
 
 import java.io.Serializable;
-
 import mementoPackage.Person.HairColor;
 
 public class PersonMemento implements Serializable {
@@ -25,8 +30,8 @@ public class PersonMemento implements Serializable {
 	public static final int maxWeight = 400;
 	
 	/**
-	 * constructor
-	 * @param p
+	 * Overloaded Constructor that takes in a person
+	 * @param p person to be saved as a memento
 	 */
 	PersonMemento(Person p){
 		heightInches = p.getHeightInches();
@@ -34,7 +39,8 @@ public class PersonMemento implements Serializable {
 		lName = p.getlName();
 		fName = p.getfName();
 		hairColor = p.getHairColor();
-	}
+	}//end of overloaded constructor definition
+	
 	/**
 	 * Give the height of the person in inches.
 	 * @return Height in inches.
@@ -60,23 +66,24 @@ public class PersonMemento implements Serializable {
 	}//end function definition
 	
 	/**
-	 * 
-	 * @return
+	 * Return the hair color of the person
+	 * @return the hair color of the person
 	 */
 	public HairColor getHairColor () {
 		return this.hairColor;
 	}//end function definition
 	
 	/**
-	 * 
-	 * @return
+	 * Returns a saved person(memento) as a person object
+	 * @return the person saved in an instance of memento
 	 */
 	public Person getSavedPerson(){
 		return new Person(lName, fName, hairColor, getHeightFeet(), getHeightInches(), getWeightPounds());
 	}//end function definition
 	
 	/**
-	 * toString method
+	 * Overridden toString method
+	 * @return the formatted string for person memento
 	 */
 	@Override
 	public String toString () {
