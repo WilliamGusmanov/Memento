@@ -1,14 +1,14 @@
+/**
+ * originator : the object for which the state is to be saved. It creates the memento and uses it in future to undo.
+ * Demonstration class that we will preserve into an instance of Memento.
+ * @author Bryan Vu
+ * @author William Gusmanov
+ */
+
 package mementoPackage; 
 
-
-
 public class Person {
-	/**
-	 * originator : the object for which the state is to be saved. It creates the memento and uses it in future to undo.
-	 * Demonstration class that we will preserve into an instance of Memento.
-	 * @author William Gusmanov, Bryan Vu
-	 *
-	 */
+
 	/** Height of the person in inches.  Note that we do not STORE the height in feet, that's calculated.
 	 */
 	private int heightInches;
@@ -164,15 +164,26 @@ public class Person {
 				this.getHeightInches()%inchesPerFoot,
 				this.weightPounds);//So we can print the Person.
 	}//end function definition
+	
+	/**
+	 * A method to save an instance of a person as a person memento
+	 * @return a saved copy of a person instance, or a person memento
+	 */
 	public PersonMemento save(){
 		//return new PersonMemento(this.lName, this.fName, hairColor, heightInches, heightInches, heightInches);
 		return new PersonMemento(new Person(this.lName,this.fName, this.hairColor, this.getHeightFeet(), this.getHeightInches(), this.getWeightPounds())); 
 	}//end function definition
 	
+	/**
+	 * A method to recieve a person memento and copy it as the 
+	 * current version of person
+	 * @param archive the person meemento object to be copied as the current version of person
+	 * @return the restores person object from person memento
+	 */
 	public Person restore(PersonMemento archive) {
 		return new Person(this.lName, this.fName, archive.getHairColor(), archive.getHeightFeet(), archive.getHeightInches(), archive.getWeightPounds());  
 	}//end function definition
-}
+}//end of person class
 
 
 
