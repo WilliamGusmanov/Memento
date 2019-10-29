@@ -48,13 +48,6 @@ public class PersonCareTaker {
 	public PersonCareTaker(String filePath) {
 		this.filePath = filePath;
 		append = false;
-		try {
-			in = new FileInputStream(filePath);
-			out = new FileOutputStream(filePath,append);
-		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 	}
 	
 	/**
@@ -89,12 +82,16 @@ public class PersonCareTaker {
 	 * @throws IOException, if file not found. 
 	 */
 	public PersonMemento getMemento() throws IOException{
+		in = new FileInputStream(filePath); 
 		DataInputStream readFromFile = new DataInputStream(new BufferedInputStream(in));
 		PersonMemento lowestWeight = null; 
 		for (int i = 0; i < personsAdded; i++) {
-			String [] personInfo = readFromFile.readUTF().split(";");
-			String lName = personInfo[0].substring(6);
-			String fName																																																																	 = personInfo[1].substring(1);
+			String FullString = readFromFile.readUTF();
+			String [] personInfo = FullString.split(",");
+			//Full String: Name: vu, bryan, Hair Color: GREY, Height:5'11, Weight #: 300
+			//String [] personInfo = readFromFile.readUTF().split(";");
+			String lName = personInfo[0].substring(6); 
+			String fName = personInfo[1].substring(1); 
 			String personHairColor = personInfo[2].substring(13);
 			String heightFeetInches = personInfo[3].substring(8); //must convert this to inches
 			String []splitheightFeetInches = heightFeetInches.split("'");
@@ -115,12 +112,13 @@ public class PersonCareTaker {
 	 * @throws IOException, if file not found
 	 */
 	public PersonMemento getMemento(int weight) throws IOException{
-		DataInputStream readFromFile = new DataInputStream(new BufferedInputStream(new FileInputStream(filePath)));
+		in = new FileInputStream(filePath);
+		DataInputStream readFromFile = new DataInputStream(new BufferedInputStream(in));
 		PersonMemento sameWeight = null; 
 		for (int i = 0; i < personsAdded; i++) {
-			String [] personInfo = readFromFile.readUTF().split(";");
+			String [] personInfo = readFromFile.readUTF().split(",");
 			String lName = personInfo[0].substring(6);
-			String fName																																																																	 = personInfo[1].substring(1);
+			String fName = personInfo[1].substring(1);
 			String personHairColor = personInfo[2].substring(13);
 			String heightFeetInches = personInfo[3].substring(8); //must convert this to inches
 			String []splitheightFeetInches = heightFeetInches.split("'");
